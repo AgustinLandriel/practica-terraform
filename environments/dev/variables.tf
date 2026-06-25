@@ -10,5 +10,5 @@ variable "environment" {
 }
 
 variable "prueba" {
-  type = string
+  default = "prueba"
 }
