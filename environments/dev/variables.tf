@@ -8,3 +8,7 @@ variable "service_name" {
 variable "environment" {
   type = string
 }
+
+variable "prueba" {
+  type = string
+}
