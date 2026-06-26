@@ -1,14 +1,24 @@
+variable "service_names" {
 
-
-variable "service_name" {
-  description = "The name of the service."
-  type        = set(string)
+  type = set(string)
 }
 
 variable "environment" {
   type = string
 }
 
-variable "prueba" {
-  default = "prueba"
+variable "cidr" {
+  type = string
+}
+
+variable "azs" {
+  type = list(string)
+}
+
+variable "public_subnets" {
+  type = list(string)
+}
+
+variable "private_subnets" {
+  type = list(string)
 }

@@ -1,17 +1,20 @@
-output "instance_ip" {
-  #value = aws_instance.example[each.key].private_ip
+output "instance_private_ip" {
 
-  value = { for service, instance in aws_instance.example : service => instance.private_ip }
+  value = module.ec2.instance_private_ip
 }
 
 output "vpc_id" {
-  value = module.vpc.vpc_id
+  value = module.networking.vpc_id
 }
 
 output "private_subnets" {
-  value = module.vpc.private_subnets
+  value = module.networking.private_subnets
 }
 
 output "public_subnets" {
-  value = module.vpc.public_subnets
+  value = module.networking.public_subnets
+}
+
+output "sg_id" {
+  value = module.networking.sg_id
 }
