@@ -1,14 +1,14 @@
 resource "aws_instance" "example" {
   for_each = var.service_name
 
-  ami                    = "ami-08e3f17ecdd66f6c8"
+  ami                    = data.aws_ami.amazon_linux.id
   instance_type          = "t3.micro"
   subnet_id              = module.vpc.public_subnets[0]
   vpc_security_group_ids = [module.terraform-sg.id]
 
   tags = {
-    ExtraTag = local.extra_tag
-    Name     = "EC2-${each.key}-${var.environment}"
+    ExtraTag    = local.extra_tag
+    Name        = "EC2-${each.key}-${var.environment}"
     Environment = var.environment
   }
 }
