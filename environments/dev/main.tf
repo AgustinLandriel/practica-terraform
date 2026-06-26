@@ -3,7 +3,7 @@ module "ec2" {
 
   service_names     = var.service_names
   instance_type     = "t3.micro"
-  subnet_id         = module.vpc.public_subnets[0]
-  security_group_id = module.terraform-sg.id
+  subnet_id         = module.networking.public_subnets[0]
+  security_group_id = module.networking.sg_id
   environment       = var.environment
 }
