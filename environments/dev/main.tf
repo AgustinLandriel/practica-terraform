@@ -7,3 +7,13 @@ module "ec2" {
   security_group_id = module.networking.sg_id
   environment       = var.environment
 }
+module "networking" {
+  source = "../../modules/networking"
+
+  environment     = var.environment
+  cidr            = var.cidr
+  azs             = var.azs
+  public_subnets  = var.public_subnets
+  private_subnets = var.private_subnets
+
+}
