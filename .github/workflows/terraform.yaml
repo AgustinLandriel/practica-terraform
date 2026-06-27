@@ -63,7 +63,7 @@ jobs:
       matrix:
         terraform_version: [1.15.7]
         environment: [dev, prod]  
-    environment: ${{ matrix.environment == 'prod' && 'production' || '' }}       
+    environment: ${{ matrix.environment == 'prod' && 'produccion' || '' }}       
     defaults:
       run:
         working-directory: environments/${{ matrix.environment }}
