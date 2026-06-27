@@ -17,15 +17,17 @@ env:
     AWS_REGION: us-east-2
 
 jobs:
-  terraform:
-    name: 'Terraform'
+
+    # JOB 1 — PLAN (corre en PRs, sin aprobación)
+
+  terraform-plan:
+
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     strategy:
       matrix:
         terraform_version: [1.15.7]
-        environment: [dev, prod]
-    
-    environment: ${{ matrix.environment == 'prod' && 'produccion' || '' }}    
+        environment: [dev, prod]     
     defaults:
       run:
         working-directory: environments/${{ matrix.environment }}
@@ -51,9 +53,36 @@ jobs:
                   
 
       - name: Terraform Plan
-        if: github.event_name == 'pull_request'
         run: terraform plan
+        
+# JOB 2 — APPLY (corre en push a main, prod con aprobación)
+  terraform-apply:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        terraform_version: [1.15.7]
+        environment: [dev, prod]  
+    environment: ${{ matrix.environment == 'prod' && 'production' || '' }}       
+    defaults:
+      run:
+        working-directory: environments/${{ matrix.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
+    ##Configurar credenciales AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::325503636955:role/github-actions-terraform
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3      
+        
+      - name: Terraform Init
+        run: terraform init        
+      
       - name: Terraform Apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve  
+        run: terraform apply -auto-approve
